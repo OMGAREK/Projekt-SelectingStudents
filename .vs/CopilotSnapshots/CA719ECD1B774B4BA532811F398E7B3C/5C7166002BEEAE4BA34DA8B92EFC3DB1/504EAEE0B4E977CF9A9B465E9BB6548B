@@ -1,0 +1,49 @@
+﻿using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.ViewModels;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+ public partial class ClassPage : ContentPage
+ {
+ private readonly ClassViewModel _classViewModel;
+
+ public ClassPage()
+ {
+ InitializeComponent();
+ _classViewModel = new ClassViewModel();
+ BindingContext = _classViewModel;
+ }
+
+ private void OnAddClicked(object sender, System.EventArgs e)
+ {
+ _classViewModel?.AddStudent();
+ }
+
+ private void OnSaveClicked(object sender, System.EventArgs e)
+ {
+ _classViewModel?.SaveClass();
+ }
+
+ private void OnDeleteClicked(object sender, System.EventArgs e)
+ {
+ _classViewModel?.DeleteClass();
+ }
+
+ private void OnNewClassClicked(object sender, System.EventArgs e)
+ {
+ _classViewModel?.CreateNewClass();
+ }
+
+ private void OnDrawClicked(object sender, System.EventArgs e)
+ {
+ _classViewModel?.Draw();
+ DisplayAlert("Result", _classViewModel?.Result ?? string.Empty, "OK");
+ }
+
+ private void OnAssignLuckyClicked(object sender, System.EventArgs e)
+ {
+ _classViewModel?.AssignLuckyNumbers();
+ DisplayAlert("Lucky numbers assigned", "Check the list", "OK");
+ }
+ }
+}

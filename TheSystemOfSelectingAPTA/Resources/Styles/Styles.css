@@ -1,0 +1,99 @@
+ContentPage {
+    background-color: #F0F2F5;
+}
+
+Label {
+    font-family: OpenSansRegular;
+    font-size: 14;
+    color: #0B2B5E;
+}
+
+Label.headline {
+    color: #0B2B5E;
+    font-size: 28;
+    font-weight: bold;
+}
+
+Label.subheadline {
+    color: #0B2B5E;
+    font-size: 20;
+    font-weight: bold;
+}
+
+Frame {
+    background-color: #FFFFFF;
+    border-color: #D0D5DD;
+    border-radius: 10;
+    padding: 14;
+}
+
+Button {
+    background-color: #0B2B5E;
+    color: #FFFFFF;
+    font-family: OpenSansRegular;
+    font-size: 14;
+    border-radius: 8;
+    min-height: 44;
+    min-width: 44;
+}
+
+Button.destructive {
+    background-color: #B42318;
+    color: #FFFFFF;
+}
+
+Button.secondary {
+    background-color: #1A4A8A;
+    color: #FFFFFF;
+}
+
+Entry {
+    color: #0B2B5E;
+    font-family: OpenSansRegular;
+    font-size: 14;
+    background-color: #FFFFFF;
+    min-height: 44;
+}
+
+Picker {
+    color: #0B2B5E;
+    font-family: OpenSansRegular;
+    font-size: 14;
+    background-color: #FFFFFF;
+    min-height: 44;
+}
+
+CheckBox {
+    color: #0B2B5E;
+    min-height: 44;
+    min-width: 44;
+}
+
+Span {
+    color: #0B2B5E;
+}
+
+CollectionView {
+    background-color: transparent;
+}
+
+ListView {
+    background-color: transparent;
+}
+
+Label.student-name {
+    color: #0B2B5E;
+    font-size: 14;
+}
+
+Label.lucky-item {
+    color: #1A4A8A;
+    font-size: 13;
+    padding: 4 2;
+}
+
+Label.result-label {
+    color: #0B2B5E;
+    font-size: 24;
+    font-weight: bold;
+}

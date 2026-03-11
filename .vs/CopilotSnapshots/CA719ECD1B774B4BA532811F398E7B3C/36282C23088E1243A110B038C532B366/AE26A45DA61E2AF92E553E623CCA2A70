@@ -1,0 +1,28 @@
+﻿using System;
+using System.Linq;
+using TheSystemOfSelectingAPTA.Services;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+ public partial class RafflePage : ContentPage
+ {
+ private readonly ClassService _service = new ClassService();
+ private Random _rng = new Random();
+ public RafflePage()
+ {
+ InitializeComponent();
+ ClassPicker.ItemsSource = _service.GetClassFiles();
+ if (ClassPicker.ItemsSource.Cast<string>().Any()) ClassPicker.SelectedIndex =0;
+ }
+
+ void OnDrawClicked(object sender, EventArgs e)
+ {
+ var name = ClassPicker.SelectedItem as string;
+ if (string.IsNullOrEmpty(name)) return;
+ var students = _service.LoadClass(name).Where(s => s.IsPresent).ToArray();
+ if (!students.Any()) { ResultLabel.Text = "No students available"; return; }
+ var idx = _rng.Next(students.Length);
+ ResultLabel.Text = students[idx].Name;
+ }
+ }
+}

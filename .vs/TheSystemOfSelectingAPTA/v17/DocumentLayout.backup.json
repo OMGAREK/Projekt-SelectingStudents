@@ -1,0 +1,178 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|c:\\users\\arkad\\source\\repos\\thesystemofselectingapta\\thesystemofselectingapta\\views\\pickerview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|solutionrelative:thesystemofselectingapta\\views\\pickerview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|c:\\users\\arkad\\source\\repos\\thesystemofselectingapta\\thesystemofselectingapta\\views\\pickerview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|solutionrelative:thesystemofselectingapta\\views\\pickerview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|c:\\users\\arkad\\source\\repos\\thesystemofselectingapta\\thesystemofselectingapta\\resources\\styles\\styles.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|solutionrelative:thesystemofselectingapta\\resources\\styles\\styles.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|c:\\users\\arkad\\source\\repos\\thesystemofselectingapta\\thesystemofselectingapta\\models\\pickermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|solutionrelative:thesystemofselectingapta\\models\\pickermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|c:\\users\\arkad\\source\\repos\\thesystemofselectingapta\\thesystemofselectingapta\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1E78A18B-3205-4DCC-A7BC-EBEBE9272E37}|TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA.csproj|solutionrelative:thesystemofselectingapta\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 17,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e506b91c-c606-466a-90a9-123d1d1e12b3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:85371364:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\App.xaml",
+              "RelativeDocumentMoniker": "TheSystemOfSelectingAPTA\\App.xaml",
+              "ToolTip": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\App.xaml",
+              "RelativeToolTip": "TheSystemOfSelectingAPTA\\App.xaml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-04T10:28:05.185Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PickerView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Views\\PickerView.xaml.cs",
+              "RelativeDocumentMoniker": "TheSystemOfSelectingAPTA\\Views\\PickerView.xaml.cs",
+              "ToolTip": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Views\\PickerView.xaml.cs",
+              "RelativeToolTip": "TheSystemOfSelectingAPTA\\Views\\PickerView.xaml.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAASwBcBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T10:02:36.298Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PickerView.xaml",
+              "DocumentMoniker": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Views\\PickerView.xaml",
+              "RelativeDocumentMoniker": "TheSystemOfSelectingAPTA\\Views\\PickerView.xaml",
+              "ToolTip": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Views\\PickerView.xaml",
+              "RelativeToolTip": "TheSystemOfSelectingAPTA\\Views\\PickerView.xaml",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAAD8AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-04T10:01:47.002Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Styles.css",
+              "DocumentMoniker": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Resources\\Styles\\Styles.css",
+              "RelativeDocumentMoniker": "TheSystemOfSelectingAPTA\\Resources\\Styles\\Styles.css",
+              "ToolTip": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Resources\\Styles\\Styles.css",
+              "RelativeToolTip": "TheSystemOfSelectingAPTA\\Resources\\Styles\\Styles.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-03-04T10:01:17.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PickerModel.cs",
+              "DocumentMoniker": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Models\\PickerModel.cs",
+              "RelativeDocumentMoniker": "TheSystemOfSelectingAPTA\\Models\\PickerModel.cs",
+              "ToolTip": "C:\\Users\\arkad\\source\\repos\\TheSystemOfSelectingAPTA\\TheSystemOfSelectingAPTA\\Models\\PickerModel.cs",
+              "RelativeToolTip": "TheSystemOfSelectingAPTA\\Models\\PickerModel.cs",
+              "ViewState": "AgIAAPgAAAAAAAAAAAAAAMIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T10:01:15.197Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c9c0ae26-aa77-11d2-b3f0-0000f87570ee}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

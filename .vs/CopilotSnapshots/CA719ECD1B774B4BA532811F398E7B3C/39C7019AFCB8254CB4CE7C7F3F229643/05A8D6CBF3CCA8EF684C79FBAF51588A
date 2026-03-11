@@ -1,0 +1,35 @@
+﻿using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.ViewModels;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+    public partial class RafflePage : ContentPage
+    {
+        private readonly RaffleViewModel _viewModel;
+
+        public RafflePage()
+        {
+            InitializeComponent();
+            _viewModel = new RaffleViewModel();
+            BindingContext = _viewModel;
+        }
+
+        private void OnDrawClicked(object sender, System.EventArgs e)
+        {
+            _viewModel?.Draw();
+        }
+
+        private void OnAssignLuckyClicked(object sender, System.EventArgs e)
+        {
+            _viewModel?.AssignLuckyNumbers();
+        }
+
+        private async void OnBackClicked(object sender, System.EventArgs e)
+        {
+            if (Navigation.NavigationStack.Count > 1)
+            {
+                await Navigation.PopAsync();
+            }
+        }
+    }
+}

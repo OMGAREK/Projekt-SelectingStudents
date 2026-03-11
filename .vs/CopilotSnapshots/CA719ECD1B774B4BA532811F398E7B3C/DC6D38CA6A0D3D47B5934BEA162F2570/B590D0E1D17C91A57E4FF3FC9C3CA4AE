@@ -1,0 +1,165 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using TheSystemOfSelectingAPTA.Models;
+
+namespace TheSystemOfSelectingAPTA.ViewModels
+{
+    public class RaffleModel
+    {
+        public string ClassName { get; set; }
+        public List<Student> Students { get; set; } = new List<Student>();
+    }
+
+    public class RaffleViewModel : INotifyPropertyChanged
+    {
+        private readonly ClassService _service = new ClassService();
+        private readonly Random _rng = new Random();
+
+        private List<RaffleModel> _classes = new List<RaffleModel>();
+        public List<RaffleModel> Classes
+        {
+            get => _classes;
+            set { if (_classes != value) { _classes = value; OnPropertyChanged(); } }
+        }
+
+        private RaffleModel _selectedClass;
+        public RaffleModel SelectedClass
+        {
+            get => _selectedClass;
+            set { if (_selectedClass == value) return; _selectedClass = value; OnPropertyChanged(); }
+        }
+
+        private string _result;
+        public string Result
+        {
+            get => _result;
+            set { if (_result != value) { _result = value; OnPropertyChanged(); } }
+        }
+
+        private ObservableCollection<string> _luckyResults = new ObservableCollection<string>();
+        public ObservableCollection<string> LuckyResults
+        {
+            get => _luckyResults;
+            set { if (_luckyResults != value) { _luckyResults = value; OnPropertyChanged(); } }
+        }
+
+        private int? _globalLuckyNumber;
+        public int? GlobalLuckyNumber
+        {
+            get => _globalLuckyNumber;
+            set { if (_globalLuckyNumber != value) { _globalLuckyNumber = value; OnPropertyChanged(); } }
+        }
+
+        public RaffleViewModel()
+        {
+            LoadClasses();
+        }
+
+        private void LoadClasses()
+        {
+            List<string> files = new List<string>(_service.GetClassFiles());
+            List<RaffleModel> models = new List<RaffleModel>();
+            foreach (string f in files)
+            {
+                RaffleModel rm = new RaffleModel { ClassName = f };
+                rm.Students = _service.LoadClass(f);
+                models.Add(rm);
+            }
+            Classes = models;
+            if (Classes.Count > 0)
+                SelectedClass = Classes[0];
+        }
+
+        public void Draw()
+        {
+            if (SelectedClass == null || string.IsNullOrEmpty(SelectedClass.ClassName)) return;
+
+            // Build a set of student names that hold the global lucky number across all classes
+            HashSet<string> luckyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (GlobalLuckyNumber.HasValue)
+            {
+                int g = GlobalLuckyNumber.Value;
+                foreach (RaffleModel rm in Classes)
+                {
+                    if (g >= 1 && g <= rm.Students.Count)
+                    {
+                        Student s = rm.Students[g - 1];
+                        if (!string.IsNullOrWhiteSpace(s.Name))
+                        {
+                            luckyNames.Add(s.Name.Trim());
+                        }
+                    }
+                }
+            }
+
+            // Select eligible students: present AND not in luckyNames
+            List<Student> eligible = SelectedClass.Students.Where(s => s.IsPresent && !luckyNames.Contains(s.Name)).ToList();
+            if (eligible.Count == 0)
+            {
+                // if no eligible (all present students have lucky number), fallback to present students ignoring lucky
+                List<Student> presentOnly = SelectedClass.Students.Where(s => s.IsPresent).ToList();
+                if (presentOnly.Count == 0)
+                {
+                    Result = "No students available";
+                    return;
+                }
+                int idxFallback = _rng.Next(presentOnly.Count);
+                Result = presentOnly[idxFallback].Name;
+                return;
+            }
+
+            int idx = _rng.Next(eligible.Count);
+            Result = eligible[idx].Name;
+        }
+
+        // Assign a single global lucky number valid for all classes: between1 and the maximum class size
+        public void AssignLuckyNumbers()
+        {
+            LuckyResults.Clear();
+            // find maximum class size
+            int max = 0;
+            foreach (RaffleModel rm in Classes)
+            {
+                if (rm.Students.Count > max) max = rm.Students.Count;
+            }
+            if (max == 0)
+            {
+                LuckyResults.Add("No students in any class");
+                GlobalLuckyNumber = null;
+                OnPropertyChanged(nameof(LuckyResults));
+                return;
+            }
+
+            int pick = _rng.Next(1, max + 1); //1..max
+            GlobalLuckyNumber = pick;
+
+            foreach (RaffleModel rm in Classes)
+            {
+                if (rm.Students.Count < pick)
+                {
+                    LuckyResults.Add($"{rm.ClassName}: no {pick}th student");
+                    continue;
+                }
+                Student chosen = rm.Students[pick - 1];
+                string status = chosen.IsPresent ? chosen.Name : "(absent)";
+                LuckyResults.Add($"{rm.ClassName}: #{pick} -> {status}");
+            }
+
+            OnPropertyChanged(nameof(LuckyResults));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+}

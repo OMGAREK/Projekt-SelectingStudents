@@ -1,0 +1,116 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace TheSystemOfSelectingAPTA.Models
+{
+    public class PickerModel
+    {
+        private readonly string dataDirectory = Path.Combine(FileSystem.AppDataDirectory, "classes");
+
+        public PickerModel()
+        {
+            if (!Directory.Exists(dataDirectory))
+            {
+                Directory.CreateDirectory(dataDirectory);
+            }
+        }
+
+        public List<string> GetClassFiles()
+        {
+            List<string> result = new List<string>();
+
+            foreach (string filePath in Directory.EnumerateFiles(dataDirectory, "*.txt"))
+            {
+                string fileName = Path.GetFileNameWithoutExtension(filePath) ?? string.Empty;
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    result.Add(fileName);
+                }
+            }
+
+            return result;
+        }
+
+        public List<PickerStudent> LoadClass(string className)
+        {
+            string path = GetFilePath(className);
+            if (!File.Exists(path))
+            {
+                return new List<PickerStudent>();
+            }
+
+            string[] lines = File.ReadAllLines(path);
+            List<PickerStudent> students = new List<PickerStudent>(lines.Length);
+
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split('|');
+                if (parts.Length < 1)
+                {
+                    continue;
+                }
+
+                string namePart = parts[0]?.Trim() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(namePart))
+                {
+                    continue;
+                }
+
+                PickerStudent student = new PickerStudent { Name = namePart };
+                if (parts.Length >= 2 && bool.TryParse(parts[1], out bool isPresent))
+                {
+                    student.IsPresent = isPresent;
+                }
+
+                students.Add(student);
+            }
+
+            return students;
+        }
+
+        public void SaveClass(string className, IEnumerable<PickerStudent> students)
+        {
+            string path = GetFilePath(className);
+            List<string> lines = new List<string>();
+
+            foreach (PickerStudent student in students)
+            {
+                lines.Add($"{student.Name}|{student.IsPresent}");
+            }
+
+            File.WriteAllLines(path, lines);
+        }
+
+        public void DeleteClass(string className)
+        {
+            string path = GetFilePath(className);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
+        private string GetFilePath(string className)
+        {
+            return Path.Combine(dataDirectory, className + ".txt");
+        }
+
+        public class PickerClass
+        {
+            public string Name { get; set; } = string.Empty;
+            public List<PickerStudent> Students { get; set; } = new List<PickerStudent>();
+        }
+
+        public class PickerStudent
+        {
+            public string Name { get; set; } = string.Empty;
+            public bool IsPresent { get; set; } = true;
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+    }
+}

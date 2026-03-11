@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ x:Class="TheSystemOfSelectingAPTA.Views.PickerView"
+ Title="Wybieracz">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="System losowania" StyleClass="headline" />
+
+            <Frame>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Zarządzaj klasami" StyleClass="subheadline" />
+                    <HorizontalStackLayout Spacing="8">
+                        <Entry Text="{Binding NewClassName}" Placeholder="Nazwa klasy (np. 1A)" HorizontalOptions="FillAndExpand" />
+                        <Button Text="Nowa klasa" Clicked="OnNewClassClicked" />
+                    </HorizontalStackLayout>
+
+                    <Picker ItemsSource="{Binding Classes}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedClass}" />
+
+                    <HorizontalStackLayout Spacing="8">
+                        <Entry Text="{Binding NewStudentName}" Placeholder="Nowy uczeń" HorizontalOptions="FillAndExpand" />
+                        <Button Text="Dodaj" Clicked="OnAddClicked" />
+                    </HorizontalStackLayout>
+
+                    <CollectionView ItemsSource="{Binding Students}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto" Padding="4">
+                                    <Label Text="{Binding Name}" StyleClass="student-name" VerticalOptions="Center" />
+                                    <CheckBox IsChecked="{Binding IsPresent}" Grid.Column="1" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <HorizontalStackLayout Spacing="8">
+                        <Button Text="Zapisz" Clicked="OnSaveClicked" />
+                        <Button Text="Usuń" StyleClass="destructive" Clicked="OnDeleteClicked" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Losowanie" StyleClass="subheadline" />
+                    <Button Text="Wylosuj" Clicked="OnDrawClicked" />
+                    <Label Text="{Binding Result}" x:Name="ResultLabel" StyleClass="result-label" />
+                    <Button Text="Przypisz numer szczęśliwy" StyleClass="secondary" Clicked="OnAssignLuckyClicked" />
+                    <CollectionView ItemsSource="{Binding LuckyResults}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding .}" StyleClass="lucky-item" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

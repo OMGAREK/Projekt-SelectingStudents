@@ -1,0 +1,20 @@
+﻿using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.ViewModels;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+ public partial class RafflePage : ContentPage
+ {
+ private RaffleViewModel ViewModel => BindingContext as RaffleViewModel;
+
+ public RafflePage()
+ {
+ InitializeComponent();
+ }
+
+ private void OnDrawClicked(object sender, System.EventArgs e)
+ {
+ ViewModel?.Draw();
+ }
+ }
+}

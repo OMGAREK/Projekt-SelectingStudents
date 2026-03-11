@@ -1,0 +1,193 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.Models;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+    public partial class PickerView : ContentPage, INotifyPropertyChanged
+    {
+        private readonly PickerModel _model = new PickerModel();
+        private readonly Random _rng = new Random();
+
+        public ObservableCollection<PickerModel.PickerStudent> Students { get; } = new ObservableCollection<PickerModel.PickerStudent>();
+        public ObservableCollection<PickerModel.PickerClass> Classes { get; } = new ObservableCollection<PickerModel.PickerClass>();
+        public ObservableCollection<string> LuckyResults { get; } = new ObservableCollection<string>();
+
+        private PickerModel.PickerClass? _selectedClass;
+        public PickerModel.PickerClass? SelectedClass
+        {
+            get => _selectedClass;
+            set
+            {
+                if (_selectedClass == value) return;
+                _selectedClass = value;
+                OnPropertyChanged();
+                LoadSelectedClass();
+            }
+        }
+
+        private string _newStudentName = string.Empty;
+        public string NewStudentName
+        {
+            get => _newStudentName;
+            set { if (_newStudentName == value) return; _newStudentName = value; OnPropertyChanged(); }
+        }
+
+        private string _newClassName = string.Empty;
+        public string NewClassName
+        {
+            get => _newClassName;
+            set { if (_newClassName == value) return; _newClassName = value; OnPropertyChanged(); }
+        }
+
+        private string _result = string.Empty;
+        public string Result
+        {
+            get => _result;
+            set { if (_result == value) return; _result = value; OnPropertyChanged(); }
+        }
+
+        public int? GlobalLuckyNumber { get; set; }
+
+        public PickerView()
+        {
+            InitializeComponent();
+            BindingContext = this;
+            LoadClassesFromModel();
+        }
+
+        private void LoadClassesFromModel()
+        {
+            Classes.Clear();
+            IEnumerable<string> files = _model.GetClassFiles();
+            foreach (string f in files)
+            {
+                PickerModel.PickerClass cm = new PickerModel.PickerClass { Name = f };
+                List<PickerModel.PickerStudent> loaded = _model.LoadClass(f);
+                cm.Students = loaded;
+                Classes.Add(cm);
+            }
+            if (Classes.Count > 0) SelectedClass = Classes[0];
+        }
+
+        private void LoadSelectedClass()
+        {
+            Students.Clear();
+            if (SelectedClass == null) return;
+            foreach (PickerModel.PickerStudent s in SelectedClass.Students)
+            {
+                Students.Add(s);
+            }
+        }
+
+        private void OnAddClicked(object sender, System.EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(NewStudentName) || SelectedClass == null) return;
+            PickerModel.PickerStudent s = new PickerModel.PickerStudent { Name = NewStudentName };
+            SelectedClass.Students.Add(s);
+            Students.Add(s);
+            NewStudentName = string.Empty;
+        }
+
+        private void OnSaveClicked(object sender, System.EventArgs e)
+        {
+            if (SelectedClass == null) return;
+            _model.SaveClass(SelectedClass.Name, SelectedClass.Students);
+        }
+
+        private void OnDeleteClicked(object sender, System.EventArgs e)
+        {
+            if (SelectedClass == null) return;
+            _model.DeleteClass(SelectedClass.Name);
+            LoadClassesFromModel();
+        }
+
+        private void OnNewClassClicked(object sender, System.EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(NewClassName)) return;
+            string name = NewClassName.Trim();
+            _model.SaveClass(name, new List<PickerModel.PickerStudent>());
+            LoadClassesFromModel();
+            PickerModel.PickerClass? found = Classes.FirstOrDefault(c => c.Name == name);
+            SelectedClass = found;
+            NewClassName = string.Empty;
+        }
+
+        private void OnDrawClicked(object sender, System.EventArgs e)
+        {
+            if (SelectedClass == null) return;
+
+            HashSet<string> luckyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (GlobalLuckyNumber.HasValue)
+            {
+                int g = GlobalLuckyNumber.Value;
+                foreach (PickerModel.PickerClass cm in Classes)
+                {
+                    if (g >= 1 && g <= cm.Students.Count)
+                    {
+                        PickerModel.PickerStudent s = cm.Students[g - 1];
+                        if (!string.IsNullOrWhiteSpace(s.Name)) luckyNames.Add(s.Name.Trim());
+                    }
+                }
+            }
+
+            List<PickerModel.PickerStudent> eligible = SelectedClass.Students
+                .Where(s => s.IsPresent && !luckyNames.Contains(s.Name))
+                .ToList();
+
+            if (!eligible.Any())
+            {
+                List<PickerModel.PickerStudent> presentOnly = SelectedClass.Students
+                    .Where(s => s.IsPresent)
+                    .ToList();
+                if (!presentOnly.Any())
+                {
+                    Result = "Brak dostępnych uczniów";
+                    DisplayAlert("Wylosowano", Result, "OK");
+                    return;
+                }
+                Result = presentOnly[_rng.Next(presentOnly.Count)].Name;
+                DisplayAlert("Wylosowano", Result, "OK");
+                return;
+            }
+
+            Result = eligible[_rng.Next(eligible.Count)].Name;
+            DisplayAlert("Wylosowano", Result, "OK");
+        }
+
+        private void OnAssignLuckyClicked(object sender, System.EventArgs e)
+        {
+            LuckyResults.Clear();
+            int max = Classes.Select(c => c.Students.Count).DefaultIfEmpty(0).Max();
+            if (max == 0)
+            {
+                LuckyResults.Add("Brak uczniów we wszystkich klasach");
+                GlobalLuckyNumber = null;
+                DisplayAlert("Numer szczęśliwy", "Brak uczniów", "OK");
+                return;
+            }
+
+            int pick = _rng.Next(1, max + 1);
+            GlobalLuckyNumber = pick;
+            foreach (PickerModel.PickerClass cm in Classes)
+            {
+                if (cm.Students.Count < pick) { LuckyResults.Add($"{cm.Name}: brak {pick}. ucznia"); continue; }
+                PickerModel.PickerStudent chosen = cm.Students[pick - 1];
+                string status = chosen.IsPresent ? chosen.Name : "(nieobecny)";
+                LuckyResults.Add($"{cm.Name}: #{pick}. {status}");
+            }
+            DisplayAlert("Numer szczęśliwy przypisany", $"Numer: {pick}", "OK");
+        }
+
+        public new event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

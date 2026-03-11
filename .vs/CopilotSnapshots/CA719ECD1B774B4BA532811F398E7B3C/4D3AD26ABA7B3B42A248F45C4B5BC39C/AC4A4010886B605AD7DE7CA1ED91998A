@@ -1,0 +1,50 @@
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using TheSystemOfSelectingAPTA.Models;
+
+namespace TheSystemOfSelectingAPTA.ViewModels
+{
+ public class StudentViewModel : INotifyPropertyChanged
+ {
+ private readonly Student _model;
+
+ public StudentViewModel(Student model)
+ {
+ _model = model ?? new Student();
+ }
+
+ public string Name
+ {
+ get => _model.Name;
+ set
+ {
+ if (value == _model.Name) return;
+ _model.Name = value;
+ OnPropertyChanged(nameof(Name));
+ }
+ }
+
+ public bool IsPresent
+ {
+ get => _model.IsPresent;
+ set
+ {
+ if (value == _model.IsPresent) return;
+ _model.IsPresent = value;
+ OnPropertyChanged(nameof(IsPresent));
+ }
+ }
+
+ public Student Model => _model;
+
+ public event PropertyChangedEventHandler PropertyChanged;
+ protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+ {
+ PropertyChangedEventHandler handler = PropertyChanged;
+ if (handler != null)
+ {
+ handler(this, new PropertyChangedEventArgs(propertyName));
+ }
+ }
+ }
+}

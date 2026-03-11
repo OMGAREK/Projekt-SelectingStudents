@@ -1,0 +1,35 @@
+﻿using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.ViewModels;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+ public partial class ClassPage : ContentPage
+ {
+ private ClassViewModel ViewModel => BindingContext as ClassViewModel;
+
+ public ClassPage()
+ {
+ InitializeComponent();
+ }
+
+ private void OnAddClicked(object sender, System.EventArgs e)
+ {
+ ViewModel?.AddStudent();
+ }
+
+ private void OnSaveClicked(object sender, System.EventArgs e)
+ {
+ ViewModel?.SaveClass();
+ }
+
+ private void OnDeleteClicked(object sender, System.EventArgs e)
+ {
+ ViewModel?.DeleteClass();
+ }
+
+ private void OnNewClassClicked(object sender, System.EventArgs e)
+ {
+ ViewModel?.CreateNewClass();
+ }
+ }
+}

@@ -1,0 +1,10 @@
+﻿namespace TheSystemOfSelectingAPTA.Models
+{
+ public class Student
+ {
+ public string Name { get; set; }
+ public bool IsPresent { get; set; } = true;
+
+ public override string ToString() => Name;
+ }
+}

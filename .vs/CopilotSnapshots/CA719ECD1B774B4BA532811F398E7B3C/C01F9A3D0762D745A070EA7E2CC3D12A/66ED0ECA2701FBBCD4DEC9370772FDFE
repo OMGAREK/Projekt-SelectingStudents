@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ xmlns:models="clr-namespace:TheSystemOfSelectingAPTA.Models"
+ xmlns:vm="clr-namespace:TheSystemOfSelectingAPTA.ViewModels"
+ x:Class="TheSystemOfSelectingAPTA.Views.ClassPage"
+ Title="Class">
+
+ <ContentPage.BindingContext>
+ <vm:ClassViewModel />
+ </ContentPage.BindingContext>
+
+ <VerticalStackLayout Padding="20" Spacing="12">
+ <Picker x:Name="ClassPicker" Title="Select Class" ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" />
+ <HorizontalStackLayout Spacing="8">
+ <Entry x:Name="ClassNameEntry" Text="{Binding NewClassName}" Placeholder="Class name (e.g.1A)" HorizontalOptions="FillAndExpand" />
+ <Button Text="New Class" Command="{Binding NewClassCommand}" />
+ </HorizontalStackLayout>
+ <Entry x:Name="NewStudentEntry" Text="{Binding NewStudentName}" Placeholder="New student name" />
+ <Button Text="Add" Command="{Binding AddStudentCommand}" />
+ <CollectionView x:Name="StudentsView" ItemsSource="{Binding Students}" SelectionMode="None">
+ <CollectionView.ItemTemplate>
+ <DataTemplate>
+ <Grid ColumnDefinitions="*,Auto" Padding="4">
+ <Label Text="{Binding Name}" VerticalOptions="Center" />
+ <CheckBox IsChecked="{Binding IsPresent}" />
+ </Grid>
+ </DataTemplate>
+ </CollectionView.ItemTemplate>
+ </CollectionView>
+ <Button Text="Save" Command="{Binding SaveCommand}" />
+ <Button Text="Delete Class" Command="{Binding DeleteClassCommand}" />
+ </VerticalStackLayout>
+
+</ContentPage>

@@ -1,0 +1,27 @@
+﻿using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.ViewModels;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+    public partial class RafflePage : ContentPage
+    {
+        private readonly RaffleViewModel _viewModel;
+
+        public RafflePage()
+        {
+            InitializeComponent();
+            _viewModel = new RaffleViewModel();
+            BindingContext = _viewModel;
+        }
+
+        private void OnDrawClicked(object sender, System.EventArgs e)
+        {
+            _viewModel?.Draw();
+        }
+
+        public void InitializeComponent()
+        {
+            Microsoft.Maui.Controls.Xaml.Extensions.LoadFromXaml(this, typeof(RafflePage));
+        }
+    }
+}

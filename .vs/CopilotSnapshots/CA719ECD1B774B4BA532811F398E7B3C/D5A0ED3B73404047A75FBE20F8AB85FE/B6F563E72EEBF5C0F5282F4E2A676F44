@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace TheSystemOfSelectingAPTA.Models
+{
+    public class PickerModel
+    {
+        private readonly string dataDir = Path.Combine(FileSystem.AppDataDirectory, "classes");
+
+        public List<PickerClass> Classes { get; } = new List<PickerClass>();
+
+        public PickerModel()
+        {
+            if (!Directory.Exists(dataDir))
+                Directory.CreateDirectory(dataDir);
+        }
+
+        public IEnumerable<string> GetClassFiles()
+        {
+            return Directory.EnumerateFiles(dataDir, "*.txt")
+                .Select(Path.GetFileNameWithoutExtension)
+                .Where(fn => !string.IsNullOrEmpty(fn))
+                .ToList();
+        }
+
+        public List<PickerStudent> LoadClass(string className)
+        {
+            string path = GetPath(className);
+            if (!File.Exists(path)) return new List<PickerStudent>();
+            string[] lines = File.ReadAllLines(path);
+            List<PickerStudent> list = new List<PickerStudent>();
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split('|');
+                if (parts.Length >= 1 && !string.IsNullOrWhiteSpace(parts[0]))
+                {
+                    PickerStudent s = new PickerStudent { Name = parts[0].Trim() };
+                    if (parts.Length >= 2 && bool.TryParse(parts[1], out bool p)) s.IsPresent = p;
+                    list.Add(s);
+                }
+            }
+            return list;
+        }
+
+        public void SaveClass(string className, IEnumerable<PickerStudent> students)
+        {
+            string path = GetPath(className);
+            IEnumerable<string> lines = students.Select(s => $"{s.Name}|{s.IsPresent}");
+            File.WriteAllLines(path, lines);
+        }
+
+        public void DeleteClass(string className)
+        {
+            string path = GetPath(className);
+            if (File.Exists(path)) File.Delete(path);
+        }
+
+        private string GetPath(string className) => Path.Combine(dataDir, className + ".txt");
+
+        public class PickerClass
+        {
+            public string? Name { get; set; }
+            public List<PickerStudent> Students { get; set; } = new List<PickerStudent>();
+        }
+
+        public class PickerStudent
+        {
+            public string? Name { get; set; }
+            public bool IsPresent { get; set; } = true;
+            public override string ToString() => Name ?? string.Empty;
+        }
+    }
+}

@@ -1,0 +1,27 @@
+﻿namespace TheSystemOfSelectingAPTA
+{
+    public partial class MainPage : ContentPage
+    {
+        public MainPage()
+        {
+            InitializeComponent();
+        }
+
+        private void OnManageClasses(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new Views.ClassPage());
+        }
+
+        private void OnDrawStudent(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new Views.RafflePage());
+        }
+
+        // Fallback InitializeComponent in case generated partial is not present in this environment
+        public void InitializeComponent()
+        {
+            Microsoft.Maui.Controls.Xaml.Extensions.LoadFromXaml(this, typeof(MainPage));
+        }
+    }
+
+}

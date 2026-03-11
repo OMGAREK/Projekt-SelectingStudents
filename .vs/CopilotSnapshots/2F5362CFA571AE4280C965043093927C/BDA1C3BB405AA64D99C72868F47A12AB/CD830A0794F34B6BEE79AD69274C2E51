@@ -1,0 +1,262 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Microsoft.Maui.Controls;
+using TheSystemOfSelectingAPTA.Models;
+
+namespace TheSystemOfSelectingAPTA.Views
+{
+    public partial class PickerView : ContentPage, INotifyPropertyChanged
+    {
+        private readonly PickerModel _model = new PickerModel();
+        private readonly Random _randomGenerator = new Random();
+
+        public ObservableCollection<PickerModel.PickerStudent> Students { get; } = new ObservableCollection<PickerModel.PickerStudent>();
+        public ObservableCollection<PickerModel.PickerClass> Classes { get; } = new ObservableCollection<PickerModel.PickerClass>();
+        public ObservableCollection<string> LuckyResults { get; } = new ObservableCollection<string>();
+
+        private PickerModel.PickerClass? _selectedClass;
+        public PickerModel.PickerClass? SelectedClass
+        {
+            get => _selectedClass;
+            set
+            {
+                if (_selectedClass == value) return;
+                _selectedClass = value;
+                OnPropertyChanged();
+                LoadSelectedClass();
+            }
+        }
+
+        private string _newStudentName = string.Empty;
+        public string NewStudentName
+        {
+            get => _newStudentName;
+            set
+            {
+                if (_newStudentName == value) return;
+                _newStudentName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _newClassName = string.Empty;
+        public string NewClassName
+        {
+            get => _newClassName;
+            set
+            {
+                if (_newClassName == value) return;
+                _newClassName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _result = string.Empty;
+        public string Result
+        {
+            get => _result;
+            set
+            {
+                if (_result == value) return;
+                _result = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int? GlobalLuckyNumber { get; set; }
+
+        public PickerView()
+        {
+            InitializeComponent();
+            BindingContext = this;
+            LoadClassesFromModel();
+        }
+
+        private void LoadClassesFromModel()
+        {
+            Classes.Clear();
+
+            IEnumerable<string> classFileNames = _model.GetClassFiles();
+
+            foreach (string fileName in classFileNames)
+            {
+                List<PickerModel.PickerStudent> loadedStudents = _model.LoadClass(fileName);
+
+                PickerModel.PickerClass pickerClass = new PickerModel.PickerClass
+                {
+                    Name = fileName,
+                    Students = loadedStudents
+                };
+
+                Classes.Add(pickerClass);
+            }
+
+            if (Classes.Count > 0)
+            {
+                SelectedClass = Classes[0];
+            }
+        }
+
+        private void LoadSelectedClass()
+        {
+            Students.Clear();
+
+            if (SelectedClass == null)
+            {
+                return;
+            }
+
+            foreach (PickerModel.PickerStudent student in SelectedClass.Students)
+            {
+                Students.Add(student);
+            }
+        }
+
+        private void OnAddClicked(object sender, EventArgs eventArgs)
+        {
+            if (string.IsNullOrWhiteSpace(NewStudentName) || SelectedClass == null)
+            {
+                return;
+            }
+
+            PickerModel.PickerStudent newStudent = new PickerModel.PickerStudent { Name = NewStudentName };
+            SelectedClass.Students.Add(newStudent);
+            Students.Add(newStudent);
+            NewStudentName = string.Empty;
+        }
+
+        private void OnSaveClicked(object sender, EventArgs eventArgs)
+        {
+            if (SelectedClass == null)
+            {
+                return;
+            }
+
+            _model.SaveClass(SelectedClass.Name, SelectedClass.Students);
+        }
+
+        private void OnDeleteClicked(object sender, EventArgs eventArgs)
+        {
+            if (SelectedClass == null)
+            {
+                return;
+            }
+
+            _model.DeleteClass(SelectedClass.Name);
+            LoadClassesFromModel();
+        }
+
+        private void OnNewClassClicked(object sender, EventArgs eventArgs)
+        {
+            if (string.IsNullOrWhiteSpace(NewClassName))
+            {
+                return;
+            }
+
+            string trimmedClassName = NewClassName.Trim();
+            _model.SaveClass(trimmedClassName, new List<PickerModel.PickerStudent>());
+            LoadClassesFromModel();
+
+            PickerModel.PickerClass? foundClass = Classes.FirstOrDefault(pickerClass => pickerClass.Name == trimmedClassName);
+            SelectedClass = foundClass;
+            NewClassName = string.Empty;
+        }
+
+        private void OnDrawClicked(object sender, EventArgs eventArgs)
+        {
+            if (SelectedClass == null)
+            {
+                return;
+            }
+
+            HashSet<string> luckyNamesSet = BuildLuckyNamesSet();
+
+            List<PickerModel.PickerStudent> eligibleStudents = SelectedClass.Students
+                .Where(student => student.IsPresent && !luckyNamesSet.Contains(student.Name))
+                .ToList();
+
+            if (eligibleStudents.Count > 0)
+            {
+                Result = eligibleStudents[_randomGenerator.Next(eligibleStudents.Count)].Name;
+                return;
+            }
+
+            List<PickerModel.PickerStudent> presentStudents = SelectedClass.Students
+                .Where(student => student.IsPresent)
+                .ToList();
+
+            if (presentStudents.Count == 0)
+            {
+                Result = "Brak dostępnych uczniów";
+                return;
+            }
+
+            Result = presentStudents[_randomGenerator.Next(presentStudents.Count)].Name;
+        }
+
+        private HashSet<string> BuildLuckyNamesSet()
+        {
+            HashSet<string> luckyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            if (!GlobalLuckyNumber.HasValue)
+            {
+                return luckyNames;
+            }
+
+            int luckyIndex = GlobalLuckyNumber.Value;
+
+            foreach (PickerModel.PickerClass pickerClass in Classes)
+            {
+                if (luckyIndex >= 1 && luckyIndex <= pickerClass.Students.Count)
+                {
+                    PickerModel.PickerStudent luckyStudent = pickerClass.Students[luckyIndex - 1];
+
+                    if (!string.IsNullOrWhiteSpace(luckyStudent.Name))
+                    {
+                        luckyNames.Add(luckyStudent.Name.Trim());
+                    }
+                }
+            }
+
+            return luckyNames;
+        }
+
+        private void OnAssignLuckyClicked(object sender, EventArgs eventArgs)
+        {
+            LuckyResults.Clear();
+
+            int maxStudentCount = 0;
+            foreach (PickerModel.PickerClass pickerClass in Classes)
+            {
+                if (pickerClass.Students.Count > maxStudentCount)
+                {
+                    maxStudentCount = pickerClass.Students.Count;
+                }
+            }
+
+            if (maxStudentCount == 0)
+            {
+                LuckyResults.Add("Brak uczniów we wszystkich klasach");
+                GlobalLuckyNumber = null;
+                return;
+            }
+
+            int pickedNumber = _randomGenerator.Next(1, maxStudentCount + 1);
+            GlobalLuckyNumber = pickedNumber;
+
+            // Dodajemy tylko jedną linijkę informującą o wylosowanym numerku dla całej aplikacji
+            LuckyResults.Add($"Szczęśliwy numerek to: #{pickedNumber}");
+        }
+
+        public new event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

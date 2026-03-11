@@ -1,0 +1,10 @@
+﻿using System.Collections.Generic;
+
+namespace TheSystemOfSelectingAPTA.Models
+{
+    public class ClassModel
+    {
+        public string Name { get; set; }
+        public List<Student> Students { get; set; } = new List<Student>();
+    }
+}

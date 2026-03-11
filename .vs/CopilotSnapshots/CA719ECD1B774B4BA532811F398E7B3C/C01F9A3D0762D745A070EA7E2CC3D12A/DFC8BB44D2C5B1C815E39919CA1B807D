@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Windows.Input;
+using TheSystemOfSelectingAPTA.Models;
+using TheSystemOfSelectingAPTA.Services;
+
+namespace TheSystemOfSelectingAPTA.ViewModels
+{
+ public class ClassViewModel : BaseViewModel
+ {
+ private readonly ClassService _service = new ClassService();
+
+ private ObservableCollection<Student> _students = new ObservableCollection<Student>();
+ public ObservableCollection<Student> Students
+ {
+ get => _students;
+ set => SetProperty(ref _students, value);
+ }
+
+ private IList<string> _classes = new List<string>();
+ public IList<string> Classes
+ {
+ get => _classes;
+ set => SetProperty(ref _classes, value);
+ }
+
+ private string _selectedClass;
+ public string SelectedClass
+ {
+ get => _selectedClass;
+ set
+ {
+ if (_selectedClass == value) return;
+ _selectedClass = value;
+ OnPropertyChanged();
+ LoadSelectedClass();
+ }
+ }
+
+ private string _newStudentName;
+ public string NewStudentName
+ {
+ get => _newStudentName;
+ set => SetProperty(ref _newStudentName, value);
+ }
+
+ private string _newClassName;
+ public string NewClassName
+ {
+ get => _newClassName;
+ set => SetProperty(ref _newClassName, value);
+ }
+
+ public ICommand AddStudentCommand { get; }
+ public ICommand SaveCommand { get; }
+ public ICommand DeleteClassCommand { get; }
+ public ICommand NewClassCommand { get; }
+
+ public ClassViewModel()
+ {
+ AddStudentCommand = new Command(AddStudent);
+ SaveCommand = new Command(SaveClass);
+ DeleteClassCommand = new Command(DeleteClass);
+ NewClassCommand = new Command(CreateNewClass);
+ LoadClasses();
+ }
+
+ private void LoadClasses()
+ {
+ IList<string> files = new List<string>(_service.GetClassFiles());
+ Classes = files;
+ if (Classes.Count >0)
+ {
+ SelectedClass = Classes[0];
+ }
+ }
+
+ private void LoadSelectedClass()
+ {
+ if (string.IsNullOrEmpty(SelectedClass)) return;
+ Students.Clear();
+ List<Student> loaded = _service.LoadClass(SelectedClass);
+ foreach (Student s in loaded)
+ {
+ Students.Add(s);
+ }
+ }
+
+ private void AddStudent()
+ {
+ if (string.IsNullOrWhiteSpace(NewStudentName)) return;
+ Students.Add(new Student { Name = NewStudentName });
+ NewStudentName = string.Empty;
+ }
+
+ private void SaveClass()
+ {
+ if (string.IsNullOrEmpty(SelectedClass)) return;
+ _service.SaveClass(SelectedClass, Students);
+ }
+
+ private void DeleteClass()
+ {
+ if (string.IsNullOrEmpty(SelectedClass)) return;
+ _service.DeleteClass(SelectedClass);
+ LoadClasses();
+ }
+
+ private void CreateNewClass()
+ {
+ if (string.IsNullOrWhiteSpace(NewClassName)) return;
+ string name = NewClassName.Trim();
+ _service.SaveClass(name, new List<Student>());
+ LoadClasses();
+ SelectedClass = name;
+ NewClassName = string.Empty;
+ }
+ }
+}

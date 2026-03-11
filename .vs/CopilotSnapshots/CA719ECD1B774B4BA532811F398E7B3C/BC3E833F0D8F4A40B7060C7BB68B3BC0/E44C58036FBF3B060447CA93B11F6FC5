@@ -1,0 +1,23 @@
+﻿namespace TheSystemOfSelectingAPTA
+{
+    public partial class MainPage : ContentPage
+    {
+        public MainPage()
+        {
+            InitializeComponent();
+        }
+
+        private void OnManageClasses(object sender, EventArgs e)
+        {
+            // Navigate to PickerView when invoked
+            Navigation.PushAsync(new Views.PickerView());
+        }
+
+        private void OnDrawStudent(object sender, EventArgs e)
+        {
+            // Navigate to PickerView as well
+            Navigation.PushAsync(new Views.PickerView());
+        }
+    }
+
+}

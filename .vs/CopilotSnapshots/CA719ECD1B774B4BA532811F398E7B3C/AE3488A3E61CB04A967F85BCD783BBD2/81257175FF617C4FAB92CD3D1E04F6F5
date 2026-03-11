@@ -1,0 +1,231 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace TheSystemOfSelectingAPTA.Models
+{
+    public class PickerModel
+    {
+        private readonly string dataFilePath = Path.Combine(FileSystem.AppDataDirectory, "students.txt");
+
+        public PickerModel()
+        {
+            if (!File.Exists(dataFilePath))
+            {
+                File.WriteAllText(dataFilePath, string.Empty);
+            }
+        }
+
+        // Wczytuje wszystkich uczniów ze wszystkich klas z jednego pliku
+        public List<PickerStudent> LoadAllStudents()
+        {
+            List<PickerStudent> allStudents = new List<PickerStudent>();
+
+            string[] lines = File.ReadAllLines(dataFilePath);
+
+            foreach (string line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                PickerStudent student = ParseLine(line);
+                if (student != null)
+                {
+                    allStudents.Add(student);
+                }
+            }
+
+            return allStudents;
+        }
+
+        // Zwraca listę unikalnych nazw klas
+        public List<string> GetClassNames()
+        {
+            List<PickerStudent> allStudents = LoadAllStudents();
+            List<string> classNames = new List<string>();
+
+            foreach (PickerStudent student in allStudents)
+            {
+                if (!classNames.Contains(student.ClassName))
+                {
+                    classNames.Add(student.ClassName);
+                }
+            }
+
+            return classNames;
+        }
+
+        // Zwraca uczniów należących do podanej klasy
+        public List<PickerStudent> LoadClass(string className)
+        {
+            List<PickerStudent> allStudents = LoadAllStudents();
+            List<PickerStudent> classStudents = new List<PickerStudent>();
+
+            foreach (PickerStudent student in allStudents)
+            {
+                if (student.ClassName == className)
+                {
+                    classStudents.Add(student);
+                }
+            }
+
+            return classStudents;
+        }
+
+        // Zapisuje wszystkich uczniów z podanej klasy (nadpisuje wpisy tej klasy)
+        public void SaveClass(string className, IEnumerable<PickerStudent> updatedStudents)
+        {
+            List<PickerStudent> allStudents = LoadAllStudents();
+
+            // Usuń wszystkich uczniów tej klasy
+            List<PickerStudent> otherStudents = new List<PickerStudent>();
+            foreach (PickerStudent student in allStudents)
+            {
+                if (student.ClassName != className)
+                {
+                    otherStudents.Add(student);
+                }
+            }
+
+            // Dodaj zaktualizowanych uczniów tej klasy
+            foreach (PickerStudent student in updatedStudents)
+            {
+                student.ClassName = className;
+                otherStudents.Add(student);
+            }
+
+            WriteAllStudents(otherStudents);
+        }
+
+        // Usuwa wszystkich uczniów podanej klasy z pliku
+        public void DeleteClass(string className)
+        {
+            List<PickerStudent> allStudents = LoadAllStudents();
+            List<PickerStudent> remaining = new List<PickerStudent>();
+
+            foreach (PickerStudent student in allStudents)
+            {
+                if (student.ClassName != className)
+                {
+                    remaining.Add(student);
+                }
+            }
+
+            WriteAllStudents(remaining);
+        }
+
+        // Usuwa flagę szczęśliwego numerka u wszystkich uczniów
+        public void ClearAllLuckyFlags()
+        {
+            List<PickerStudent> allStudents = LoadAllStudents();
+
+            foreach (PickerStudent student in allStudents)
+            {
+                student.HasLuckyNumber = false;
+            }
+
+            WriteAllStudents(allStudents);
+        }
+
+        // Ustawia flagę szczęśliwego numerka dla uczniów o podanym Id w każdej klasie
+        public void AssignLuckyNumber(int luckyId)
+        {
+            List<PickerStudent> allStudents = LoadAllStudents();
+
+            foreach (PickerStudent student in allStudents)
+            {
+                student.HasLuckyNumber = (student.Id == luckyId);
+            }
+
+            WriteAllStudents(allStudents);
+        }
+
+        // Generuje kolejne Id dla nowego ucznia w danej klasie
+        public int GetNextIdForClass(string className)
+        {
+            List<PickerStudent> classStudents = LoadClass(className);
+
+            int maxId = 0;
+            foreach (PickerStudent student in classStudents)
+            {
+                if (student.Id > maxId)
+                {
+                    maxId = student.Id;
+                }
+            }
+
+            return maxId + 1;
+        }
+
+        private PickerStudent ParseLine(string line)
+        {
+            string[] parts = line.Split('|');
+
+            // Format: Klasa|Id|Imię|Obecny|SzczęśliwyNumerek
+            if (parts.Length < 5)
+            {
+                return null;
+            }
+
+            string className = parts[0].Trim();
+            string name = parts[2].Trim();
+
+            if (string.IsNullOrWhiteSpace(className) || string.IsNullOrWhiteSpace(name))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(parts[1].Trim(), out int id))
+            {
+                return null;
+            }
+
+            bool.TryParse(parts[3].Trim(), out bool isPresent);
+            bool.TryParse(parts[4].Trim(), out bool hasLuckyNumber);
+
+            return new PickerStudent
+            {
+                ClassName = className,
+                Id = id,
+                Name = name,
+                IsPresent = isPresent,
+                HasLuckyNumber = hasLuckyNumber
+            };
+        }
+
+        private void WriteAllStudents(List<PickerStudent> students)
+        {
+            List<string> lines = new List<string>();
+
+            foreach (PickerStudent student in students)
+            {
+                lines.Add($"{student.ClassName}|{student.Id}|{student.Name}|{student.IsPresent}|{student.HasLuckyNumber}");
+            }
+
+            File.WriteAllLines(dataFilePath, lines);
+        }
+
+        public class PickerClass
+        {
+            public string Name { get; set; } = string.Empty;
+            public List<PickerStudent> Students { get; set; } = new List<PickerStudent>();
+        }
+
+        public class PickerStudent
+        {
+            public string ClassName { get; set; } = string.Empty;
+            public int Id { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public bool IsPresent { get; set; } = true;
+            public bool HasLuckyNumber { get; set; } = false;
+
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+    }
+}
